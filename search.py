@@ -12,4 +12,6 @@ res = service.cse().list(
 	).execute()
 
 
+pprint.pprint(res['items'][0]['htmlTitle'])
 pprint.pprint(res['items'][0]['formattedUrl'])
+pprint.pprint(res['items'][0]['htmlSnippet'])
