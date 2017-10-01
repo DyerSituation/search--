@@ -10,34 +10,46 @@ def removeStopWords(tokenList):
 		stopList = f.read().splitlines()
 	return [token for token in tokenList if token not in stopList]
 
-
-
 def mostCommon(tokenList):
 	freqs = Counter(tokenList)
 	results = [freqs.most_common(2)[0][0], freqs.most_common(2)[1][0]]
 	return results
 
-def main():
-	service = build("customsearch", "v1", developerKey="AIzaSyBbGfil_xv2ICSW4xjT5RYY92l96nahFEs")
 
+def sendQuery(service, q):
 	res = service.cse().list(
-		q='cow',
+		q=q,
 		cx='007382945159574133954:avqdfgjg420',
 		).execute()
-
-	title = res['items'][0]['htmlTitle'].lower()
-	summary = res['items'][0]['htmlSnippet'].lower()
-
-	titleTokens = removeStopWords(re.findall(r'\b[a-z]{3,20}\b', title))
-	summaryTokens = removeStopWords(re.findall(r'\b[a-z]{3,20}\b', summary))
-	print mostCommon(summaryTokens)
-#	print titleTokens
-#	pprint.pprint(res['items'][0]['htmlTitle'])
-#	pprint.pprint(res['items'][0]['formattedUrl'])
-#	pprint.pprint(res['items'][0]['htmlSnippet'])
-#	pprint.pprint(res['items'])
+	return res
 
 
+def main():
+	service = build("customsearch", "v1", developerKey="AIzaSyBbGfil_xv2ICSW4xjT5RYY92l96nahFEs")
+	
+	goalP = float(sys.argv[2]) * 10
+	p = -1
+	q = sys.argv[3]
+	res = sendQuery(service, q)
+	while p < goalP and p != 0:
+		print(q)
+		titles = []
+		snippets = []
+		for page in res['items']:
+			tit = page['htmlTitle'].encode("utf-8")
+			snip = page['htmlSnippet'].encode("utf-8")
+			print(tit + "\n" + snip)
+			mark = raw_input('relevant, y/n?')
+			if mark == 'y':
+				titles.append(tit.lower)
+				snippets.append(snip.lower)
 
+		p = len(titles)
+
+		newWords = mostCommon(titles)
+		for word in newWords:
+			q = q + " " + word
+
+	print("done")
 
 if __name__ == '__main__': main()
