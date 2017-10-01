@@ -4,11 +4,14 @@ import sys 		#to take command line args
 import re
 import pprint
 
-#def removeStopWords():
+def removeStopWords(tokenList):
+	with open('stopWords.txt') as f:
+		stopList = f.read().splitlines()
+	return [token for token in tokenList if token not in stopList]
 
 
 
-#def findFrequency():
+def findFrequency():
 
 
 def main():
@@ -22,8 +25,9 @@ def main():
 	title = res['items'][0]['htmlTitle'].lower()
 	summary = res['items'][0]['htmlSnippet'].lower()
 
-	titleTokens = re.findall(r'\b[a-z]{3,20}\b', title)
-	print titleTokens
+	titleTokens = removeStopWords(re.findall(r'\b[a-z]{3,20}\b', title))
+	summaryTokens = removeStopWords(re.findall(r'\b[a-z]{3,20}\b', summary))
+#	print titleTokens
 #	pprint.pprint(res['items'][0]['htmlTitle'])
 #	pprint.pprint(res['items'][0]['formattedUrl'])
 #	pprint.pprint(res['items'][0]['htmlSnippet'])
