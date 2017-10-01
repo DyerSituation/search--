@@ -13,3 +13,15 @@ e)
 f)
 Search engine API key: AIzaSyBbGfil_xv2ICSW4xjT5RYY92l96nahFEs
 Engine ID: 007382945159574133954:avqdfgjg420
+
+
+
+
+
+
+
+
+//
+https://programminghistorian.org/lessons/counting-frequencies
+http://mcsp.wartburg.edu/zelle/python/ppics1/code/chapter11/wordfreq.py
+
