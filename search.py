@@ -38,8 +38,8 @@ def main():
 		for page in res['items']:
 			tit = page['htmlTitle'].encode("utf-8")
 			snip = page['htmlSnippet'].encode("utf-8")
-			print(tit + "\n" + snip)
-			mark = raw_input('relevant, y/n?')
+			print("\n" + tit + "\n" + snip + "\n")
+			mark = raw_input('relevant, y/n?\n')
 			if mark == 'y':
 				titles.append(tit.lower)
 				snippets.append(snip.lower)
@@ -48,7 +48,9 @@ def main():
 
 		newWords = mostCommon(titles)
 		for word in newWords:
-			q = q + " " + word
+			q = q + " " + str(word)
+
+		print("next loop\n")
 
 	print("done")
 
