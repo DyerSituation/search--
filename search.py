@@ -3,6 +3,7 @@ import json
 import sys 		#to take command line args
 import re
 import pprint
+from collections import Counter
 
 def removeStopWords(tokenList):
 	with open('stopWords.txt') as f:
@@ -11,8 +12,10 @@ def removeStopWords(tokenList):
 
 
 
-def findFrequency():
-
+def mostCommon(tokenList):
+	freqs = Counter(tokenList)
+	results = [freqs.most_common(2)[0][0], freqs.most_common(2)[1][0]]
+	return results
 
 def main():
 	service = build("customsearch", "v1", developerKey="AIzaSyBbGfil_xv2ICSW4xjT5RYY92l96nahFEs")
@@ -27,6 +30,7 @@ def main():
 
 	titleTokens = removeStopWords(re.findall(r'\b[a-z]{3,20}\b', title))
 	summaryTokens = removeStopWords(re.findall(r'\b[a-z]{3,20}\b', summary))
+	print mostCommon(summaryTokens)
 #	print titleTokens
 #	pprint.pprint(res['items'][0]['htmlTitle'])
 #	pprint.pprint(res['items'][0]['formattedUrl'])
