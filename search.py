@@ -43,6 +43,10 @@ def main():
 			snip = page['htmlSnippet']
 			print(tit + "\n" + snip)
 			mark = raw_input('relevant, y/n?')
+			tit = page['htmlTitle'].encode("utf-8")
+			snip = page['htmlSnippet'].encode("utf-8")
+			print("\n" + tit + "\n" + snip + "\n")
+			mark = raw_input('relevant, y/n?\n')
 			if mark == 'y':
 				titles.append(parseWords(tit.lower()))
 				snippets.append(parseWords(snip.lower()))
@@ -54,7 +58,9 @@ def main():
 		print ("new words: ") 
 		print (newWords)
 		for word in newWords:
-			q = q + " " + word
+			q = q + " " + str(word)
+
+		print("next loop\n")
 
 	print("done")
 
