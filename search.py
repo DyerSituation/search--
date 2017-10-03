@@ -5,6 +5,8 @@ import re
 import pprint
 from collections import Counter
 
+def parseWords(string):
+
 def removeStopWords(tokenList):
 	with open('stopWords.txt') as f:
 		stopList = f.read().splitlines()
@@ -30,23 +32,27 @@ def main():
 	goalP = float(sys.argv[2]) * 10
 	p = -1
 	q = sys.argv[3]
-	res = sendQuery(service, q)
 	while p < goalP and p != 0:
-		print(q)
+		res = sendQuery(service, q)
+		print("new query: \n")
+		print("\n" + q + "\n")
 		titles = []
 		snippets = []
 		for page in res['items']:
-			tit = page['htmlTitle'].encode("utf-8")
-			snip = page['htmlSnippet'].encode("utf-8")
+			tit = page['htmlTitle']
+			snip = page['htmlSnippet']
 			print(tit + "\n" + snip)
 			mark = raw_input('relevant, y/n?')
 			if mark == 'y':
-				titles.append(tit.lower)
-				snippets.append(snip.lower)
+				titles.append(parseWords(tit.lower()))
+				snippets.append(parseWords(snip.lower()))
 
 		p = len(titles)
-
+		print("All titles: ")
+		print ( titles)
 		newWords = mostCommon(titles)
+		print ("new words: ") 
+		print (newWords)
 		for word in newWords:
 			q = q + " " + word
 
