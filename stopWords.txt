@@ -424,7 +424,6 @@ p
 pa
 page
 pe
-per
 perhaps
 pf
 pg
@@ -455,7 +454,6 @@ same
 sb
 sc
 sd
-se
 seem
 seemed
 seeming
