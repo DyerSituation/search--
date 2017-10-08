@@ -38,7 +38,6 @@ def reorder(q, wordsList):
 			freqs[pair] = wordsString.count(pairString)
 
 	sortedPairs = sorted(freqs.items(), key=operator.itemgetter(1), reverse=True)
-	print("sortedPairs", sortedPairs)
 
 	for pair in sortedPairs:
 		if pair[0][0] not in newQ and pair[0][1] not in newQ: 
@@ -58,8 +57,8 @@ def sendQuery(service, q):
 	return res
 
 def main():
-	clientKey = 'AIzaSyBbGfil_xv2ICSW4xjT5RYY92l96nahFEs'
-	engineKey = '007382945159574133954:avqdfgjg420'
+	clientKey = sys.argv[1]
+	engineKey = sys.argv[2]
 	precision = sys.argv[3]
 	q = sys.argv[4]
 	print ("Parameters:\nClient key = {}\nEngine key = {}\nPrecision = {}\nQuery = {}"
