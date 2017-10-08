@@ -1,9 +1,8 @@
 from apiclient.discovery import build
-import json
 import sys 		#to take command line args
+import json
 import re
 from itertools import permutations
-import pprint
 from collections import Counter
 import operator
 
@@ -11,7 +10,7 @@ import operator
 def parseWords(string):
 	htmlClnr = re.compile('<.*?>')
 	string = re.sub(htmlClnr, '', string)
-	string = re.sub("[^a-zA-Z 	]+", "", string) #does this work?
+	string = re.sub("[^a-zA-Z 	]+", "", string)
 	return string.split()
 
 #takes in file with stopwords, removes them from list
@@ -27,7 +26,7 @@ def mostCommon(tokenList, queryList):
 	results = [freqs.most_common(2)[0][0], freqs.most_common(2)[1][0]]
 	return results
 
-#takes in list of words and q. for each pair of words in q
+#reorders query using the lists of titles and snippets
 def reorder(q, wordsList):
 	wordPairs = permutations(q.split(),2)
 	wordsString = ' '.join(wordsList)
@@ -39,6 +38,7 @@ def reorder(q, wordsList):
 			freqs[pair] = wordsString.count(pairString)
 
 	sortedPairs = sorted(freqs.items(), key=operator.itemgetter(1), reverse=True)
+	print("sortedPairs", sortedPairs)
 
 	for pair in sortedPairs:
 		if pair[0][0] not in newQ and pair[0][1] not in newQ: 
@@ -60,15 +60,14 @@ def sendQuery(service, q):
 def main():
 	clientKey = 'AIzaSyBbGfil_xv2ICSW4xjT5RYY92l96nahFEs'
 	engineKey = '007382945159574133954:avqdfgjg420'
-	q = sys.argv[3]
-	precision = sys.argv[2]
-	print ("Parameters:\nClient key = {}\nEnginekey = {}\nQuery = {}\nprecision = {}"
-			.format(clientKey, engineKey, q, precision))
+	precision = sys.argv[3]
+	q = sys.argv[4]
+	print ("Parameters:\nClient key = {}\nEngine key = {}\nPrecision = {}\nQuery = {}"
+			.format(clientKey, engineKey, precision, q))
 	service = build("customsearch", "v1", developerKey="AIzaSyBbGfil_xv2ICSW4xjT5RYY92l96nahFEs")
 	
-	goalP = float(sys.argv[2]) * 10
+	goalP = float(precision) * 10
 	p = -1
-	q = sys.argv[3]
 	queryList = []
 	queryList.extend(q.split())
 	while p < goalP and p != 0:
@@ -79,21 +78,19 @@ def main():
 		if len(res['items']) < 10:
 			print "too few results"
 			sys.exit()
-		print("============================================")
 		print("Google search results:")
-		print("new query: \n")
-		print("\n" + q + "\n")
+		print("============================================")
+		print("new query: " + q)
 		titles = []
 		snippets = []
 		p = 0
-		print("res[items] size: \n")
 		
 		for page in res['items']:
 			tit = page['htmlTitle']
 			snip = page['htmlSnippet']
 			url = page['displayLink']
-			print(url)
-			print("\n" + tit + "\n" + snip + "\n")
+			print("\n" + url)
+			print(tit + "\n" + snip + "\n")
 			mark = raw_input('relevant, y/n?\n')
 			if mark.lower() == 'y':
 				titles.extend(removeStopWords(parseWords(tit.lower())))
@@ -102,19 +99,16 @@ def main():
 		if p == 0:
 			print "no results"
 			sys.exit()
-		print("All titles: ")
-		print (titles)
 		newWords = mostCommon(titles + snippets, queryList)
-		print ("new words: ") 
-		print (newWords)
-		print("queryList: ")
-		print(queryList)
+		print("new words: ") 
+		print(newWords)
 		for word in newWords:
 			queryList.append(word)
 			q = q + " " + str(word)
 		q = reorder(q, titles + snippets)
+		print("precision: " + str(float(p)/10))
 		print("next loop\n")
 
-	print("done")
+	print("desired precision reached, done")
 
 if __name__ == '__main__': main()
