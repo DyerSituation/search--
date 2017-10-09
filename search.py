@@ -38,12 +38,12 @@ def reorder(q, wordsList):
 			freqs[pair] = wordsString.count(pairString)
 
 	sortedPairs = sorted(freqs.items(), key=operator.itemgetter(1), reverse=True)
-
+	#add pair if not already in query
 	for pair in sortedPairs:
 		if pair[0][0] not in newQ and pair[0][1] not in newQ: 
 				newQ.append(pair[0][0])
 				newQ.append(pair[0][1])
-
+	#add words not found in pair
 	for word in q.split():
 		if word not in newQ:
 			newQ.append(word)
